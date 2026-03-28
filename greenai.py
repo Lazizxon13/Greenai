@@ -1,9 +1,10 @@
 import asyncio
 import logging
 import pandas as pd
-import google.generativeai as genai
 import os
 from datetime import datetime, timedelta
+
+import google.genai as genai   # Yangi to'g'ri paket
 
 from aiogram import Bot, Dispatcher, types
 from aiogram.filters import Command
@@ -25,7 +26,6 @@ CACHE_MINUTES = 60
 # ================= KATALOG =================
 def load_catalog(force=False):
     global catalog_data, last_update
-    
     if not force and last_update and (datetime.now() - last_update) < timedelta(minutes=CACHE_MINUTES):
         return
 
@@ -38,33 +38,32 @@ def load_catalog(force=False):
         print(f"❌ Katalog xatosi: {e}")
         catalog_data = "XATO: Katalog yuklanmadi."
 
-# ================= GEMINI =================
-genai.configure(api_key=GOOGLE_API_KEY)
+# ================= GEMINI (Yangi usul) =================
+client = genai.Client(api_key=GOOGLE_API_KEY)
 
 bot = Bot(token=TELEGRAM_TOKEN)
 dp = Dispatcher()
 logging.basicConfig(level=logging.INFO)
 
-# ================= SYSTEM PROMPT =================
+# ================= TO‘LIQ SYSTEM PROMPT =================
 SYSTEM_PROMPT = """
 Siz Greenleaf Family korporatsiyasining rasmiy Aqlli Marketing Maslahatchi AI sisiz.
-Siz marketing planini mukammal bilasiz va uni oddiy, aniq va ilhomlantiruvchi tarzda tushuntirasiz.
+Marketing planini mukammal bilasiz va oddiy, aniq, ilhomlantiruvchi tarzda tushuntirasiz.
 
 ASOSIY QOIDALAR:
-- Har doim rasmiy marketing planga asoslanib javob bering.
-- Javoblar qisqa, lo'nda va amaliy bo'lsin.
-- Yangi hamkorlarga bosqichma-bosqich o'rgating.
-- Maqsad: odamlarni biznesga jalb qilish va ularni muvaffaqiyatli shogird qilish.
+- Javoblar qisqa va lo'nda bo'lsin, lekin kerak bo'lsa chuqurroq tushuntiring.
+- Yangi hamkorlarni bosqichma-bosqich o'rgating.
+- Har doim "biz bir jamoamiz" ruhida gapiring.
 
-Greenleaf Marketing Planining asosiy elementlari:
-1. Paketlar: Bronza (55 PV), Serebro (110 PV), Zoloto (165 PV), Platina (275 PV), Brilliant (825 PV), Korona (1650 PV).
-2. Referal bonusi — Platina va yuqorida 5%.
-3. Komandniy bonus (GB) — binary tizim.
-4. Bonus s prodazh (SB), Voucher bonusi, Liderskiy bonuslar va boshqalar.
+Greenleaf Marketing Planining asosiy qismlari:
+- Paketlar: Platina (275 PV) eng mashhur paket.
+- Referal bonusi: 5% (Platina va yuqorida)
+- Komandniy (Binary) bonus (GB)
+- Bonus s prodazh (SB) — status bo'yicha
+- Voucher bonusi (2%)
+- Liderskiy bonuslar va Direktorlar premiyalari (avtomobil, sayohat, kvartira)
 
-4 Ustun va 10 Asosni ham mukammal bilasiz.
-
-Javob uslubi: samimiy, ilhomlantiruvchi, "biz bir jamoamiz" ruhida gapiring.
+4 Ustun va 10 Asosni ham yaxshi bilasiz.
 """
 
 # ================= BUYRUQLAR =================
@@ -83,49 +82,48 @@ async def cmd_start(message: types.Message):
 
 @dp.message(Command("4ustun"))
 async def cmd_4ustun(message: types.Message):
-    await message.answer("🌟 GREENLEAF BIZNESNING 4 USTUNI\n\n1. Mahsulot sifati\n2. Marketing plani\n3. O‘qitish\n4. Muunosabatlar va G‘amxo‘rlik (eng muhimi)\n\nQaysi ustunni chuqurroq bilmoqchisiz?")
+    await message.answer(
+        "🌟 GREENLEAF BIZNESNING 4 USTUNI\n\n"
+        "1. Mahsulot sifati va talabi\n"
+        "2. Marketing plani (daromad tizimi)\n"
+        "3. O‘qitish va rivojlanish\n"
+        "4. **Muunosabatlar va G‘amxo‘rlik** — eng muhim ustun!\n\n"
+        "Qaysi ustunni chuqurroq bilmoqchisiz?"
+    )
 
 @dp.message(Command("marketingplan"))
 async def cmd_marketingplan(message: types.Message):
-    await message.answer("📊 Greenleaf Marketing Plan:\n\n• Platina paketi (275 PV) — eng mashhur\n• Referal bonusi 5%\n• Binary (Komandniy) bonus\n• Liderskiy bonuslar\n\nQaysi bonus haqida batafsil ma’lumot kerak?")
+    await message.answer(
+        "📊 Greenleaf Marketing Planining asosiy qismlari:\n\n"
+        "• **Platina paketi (275 PV)** — eng mashhur boshlang‘ich paket\n"
+        "• **Referal bonusi** — 5%\n"
+        "• **Binary (Komandniy) bonus** — chap va o‘ng guruh orqali\n"
+        "• **Bonus s prodazh (SB)** — status bo‘yicha\n"
+        "• Liderskiy bonuslar va Direktorlar mukofotlari\n\n"
+        "Qaysi bonus yoki qism haqida **batafsil** ma’lumot kerak?"
+    )
 
-@dp.message(Command("qoshilish"))
-async def cmd_join(message: types.Message):
-    await message.answer("✅ Hamkor bo‘lish uchun:\n1. Ro‘yxatdan o‘ting\n2. Platina yoki boshqa paketni tanlang\n3. Shaxsiy aktivlikni boshlang\n\nHozir ro‘yxatdan o‘tmoqchimisiz?")
+# Boshqa buyruqlar (qoshilish, taklif) oldingi kodda qolgan holatda qoldiring
 
-@dp.message(Command("taklif"))
-async def cmd_referral(message: types.Message):
-    me = await bot.get_me()
-    link = f"https://t.me/{me.username}?start={message.from_user.id}"
-    await message.answer(f"🔗 Greenleaf oilasini kengaytiring!\n\nReferal havolangiz:\n{link}")
-
-# ================= ASOSIY JAVOB =================
+# ================= ASOSIY JAVOB (Yangi google.genai) =================
 @dp.message()
 async def handle_text(message: types.Message):
     await bot.send_chat_action(message.chat.id, "typing")
     load_catalog()
 
     try:
-        model = genai.GenerativeModel(
-            model_name='gemini-2.5-flash',
-            system_instruction=SYSTEM_PROMPT
-        )
-
-        full_prompt = f"Katalog:\n{catalog_data}\n\nFoydalanuvchi savoli: {message.text}"
-
-        response = model.generate_content(
-            full_prompt,
-            generation_config={"temperature": 0.7, "max_output_tokens": 800}
+        response = client.models.generate_content(
+            model="gemini-2.5-flash",
+            contents=f"{SYSTEM_PROMPT}\n\nKatalog:\n{catalog_data}\n\nFoydalanuvchi savoli: {message.text}"
         )
 
         await message.reply(response.text)
 
     except Exception as e:
-        error_str = str(e).lower()
-        if "429" in error_str or "quota" in error_str:
+        logging.error(f"Xato: {e}")
+        if "429" in str(e) or "quota" in str(e).lower():
             await message.answer("⏳ API limiti tugadi. 1-2 daqiqa kuting.")
         else:
-            logging.error(f"Xato: {e}")
             await message.answer("Texnik xatolik yuz berdi. Birozdan keyin qayta sinab ko‘ring.")
 
 # ================= ISHGA TUSHIRISH =================
