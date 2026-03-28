@@ -13,7 +13,7 @@ from aiohttp import web
 # ================= SOZLAMALAR =================
 TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
 GOOGLE_API_KEY = os.environ.get("GOOGLE_API_KEY")
-WEBHOOK_URL = os.environ.get("WEBHOOK_URL")   # Render.com da to'liq URL bo'lishi kerak
+WEBHOOK_URL = os.environ.get("WEBHOOK_URL")
 
 if not TELEGRAM_TOKEN or not GOOGLE_API_KEY or not WEBHOOK_URL:
     raise ValueError("❌ TELEGRAM_TOKEN, GOOGLE_API_KEY yoki WEBHOOK_URL topilmadi!")
@@ -52,22 +52,29 @@ SYSTEM_PROMPT = """
 Siz Greenleaf Family korporatsiyasining rasmiy Aqlli Marketing Maslahatchi AI sisiz.
 
 SIZNING ASOSIY VAZIFANGIZ:
-- Greenleaf MLM biznesining 4 ta asosiy ustuni va 10 ta asosini mukammal bilish va o'rgatish.
-- Marketing plan, bonuslar, paketlar va imkoniyatlarni aniq tushuntirish.
+- Greenleaf MLM biznesining 4 ta ustuni va 10 ta asosini mukammal bilish va o'rgatish.
+- Marketing plan, bonuslar va imkoniyatlarni aniq tushuntirish.
 - Yangi hamkorlarni jalb qilish va shogirtlarni bosqichma-bosqich o'qitish.
 
-4 USTUN:
-1. Mahsulot sifati va talabi
-2. Marketing plani (daromad tizimi)
-3. O'qitish va rivojlanish
-4. Muunosabatlar va G'amxo'rlik (eng muhim ustun — Patmon Radjo konsepsiyasi)
+4 USTUN (aniq):
+1. Uzluksizlik (Biznesdan bir kun ham chiqib ketmaslik
+2. Promoushn (Hurmat va e’tirof) Bu — hamkorlarga kuch berish san’ati.
+3. Ustozlik (Upline va Downline munosabatlari)
+4. Muunosabatlar va G'amxo'rlik (eng muhim ustun)
 
-10 ASOS va barcha bonuslarni (Referal, Binary, SB, Voucher, Liderskiy va h.k.) mukammal bilasiz.
+10 ASOS (aniq):
+1. Nuqtai nazarni o'zgartirish
+2. Maqsad belgilash
+3. Mas'uliyat va vaqt
+4. Ro'yxat tuzish
+5. Ishga taklif qilish
+6. Prezentatsiya
+7. Kuzatuv (Follow-up)
+8. Xarid
+9. Himoya (o'qitish)
+10. O'z kopiyalaringizni tayyorlash (shogird tarbiyalash)
 
-MUHIM QOIDA:
-- "/4ustun", "4 ustun" yoki "to'rtinchi ustun" deb so'ralganda faqat biznesning 4 ta ustuni haqida gapiring.
-- Katalog faqat mahsulot haqidagi savollarda ishlatiladi.
-- Javoblar samimiy, ilhomlantiruvchi va "biz bir jamoamiz" ruhida bo'lsin.
+Javob uslubi: samimiy, ilhomlantiruvchi va "biz bir jamoamiz" ruhida.
 """
 
 # ================= BUYRUQLAR =================
@@ -85,13 +92,42 @@ async def cmd_start(message: types.Message):
 
 @dp.message(Command("4ustun"))
 async def cmd_4ustun(message: types.Message):
+    text = """🏛 Tarmoqli marketingning 4 ta mustahkam ustuni
+
+Muvaffaqiyat tasodif emas, u — to‘g‘ri qurilgan arxitektura natijasidir. Agar biznesingiz o‘smayotgan bo‘lsa, demak, ushbu ustunlardan biri zaiflashgan.
+
+1️⃣-ustun: Uzluksizlik (Biznesdan bir kun ham chiqib ketmaslik)
+Bu tarmoqli marketingning "Oltin qoidasi". Biznesingiz "SMS apparati" hech qachon o‘chmasligi kerak.
+
+2️⃣-ustun: Promoushn (Hurmat va e’tirof)
+Bu — hamkorlarga kuch berish san’ati. Hurmat chin yurakdan chiqishi shart.
+
+3️⃣-ustun: Ustozlik (Upline va Downline munosabatlari)
+Yolg‘iz harakat qilgan odam bu biznesda yutiladi. Ustoz va shogird o‘rtasidagi doimiy aloqa muhim.
+
+4️⃣-ustun: Munosabatlar konsepsiyasi
+Bu — tizimning eng muhim va poydevor qismi. Tarmoqli marketing — bu odamlar o‘rtasidagi munosabatlar biznesidir.
+
+🎯 Xulosa: Ushbu to‘rtta ustunni o‘z ish uslubingizga tatbiq qilsangiz, siz shunchaki sotuvchi emas, balki global tarmoq mutaxassisiga aylanasiz.
+
+Qaysi ustunni chuqurroq o‘rganmoqchisiz?"""
+    await message.answer(text)
+
+@dp.message(Command("10asos"))
+async def cmd_10asos(message: types.Message):
     await message.answer(
-        "🌟 GREENLEAF BIZNESNING 4 USTUNI\n\n"
-        "1. Mahsulot sifati va talabi\n"
-        "2. Marketing plani (daromad tizimi)\n"
-        "3. O‘qitish va rivojlanish\n"
-        "4. **Muunosabatlar va G‘amxo‘rlik** — eng kuchli ustun!\n\n"
-        "Qaysi ustunni chuqurroq bilmoqchisiz?"
+        "📋 BIZNES TAShKIL QILIShNING 10 ASOSI\n\n"
+        "1. Nuqtai nazarni o'zgartirish\n"
+        "2. Maqsad belgilash\n"
+        "3. Mas'uliyat va vaqt\n"
+        "4. Ro'yxat tuzish\n"
+        "5. Ishga taklif qilish\n"
+        "6. Prezentatsiya\n"
+        "7. Kuzatuv (Follow-up)\n"
+        "8. Xarid\n"
+        "9. Himoya (o'qitish)\n"
+        "10. O'z kopiyalaringizni tayyorlash (shogird tarbiyalash)\n\n"
+        "Qaysi asosdan boshlaymiz? (1 dan 10 gacha raqam yozing)"
     )
 
 @dp.message(Command("marketingplan"))
@@ -99,10 +135,8 @@ async def cmd_marketingplan(message: types.Message):
     await message.answer(
         "📊 Greenleaf Marketing Planining asosiy qismlari:\n\n"
         "• Platina paketi (275 PV) — eng mashhur\n"
-        "• Referal bonusi — 5%\n"
+        "• Referal bonusi 5%\n"
         "• Binary (Komandniy) bonus\n"
-        "• Bonus s prodazh (SB)\n"
-        "• Voucher bonusi\n"
         "• Liderskiy bonuslar va Direktorlar premiyalari\n\n"
         "Qaysi bonus yoki qism haqida batafsil ma’lumot kerak?"
     )
