@@ -1,1 +1,4 @@
-
+aiogram==3.13.0
+pandas
+google-generativeai
+python-dotenv   # agar .env ishlatmoqchi bo'lsangiz
