@@ -84,11 +84,48 @@ async def cmd_start(message: types.Message):
 async def cmd_4ustun(message: types.Message):
     await message.answer(
         "🌟 GREENLEAF BIZNESNING 4 USTUNI\n\n"
-        "1. Mahsulot sifati va talabi\n"
-        "2. Marketing plani (daromad tizimi)\n"
-        "3. O‘qitish va rivojlanish\n"
-        "4. **Muunosabatlar va G‘amxo‘rlik** — eng muhim ustun!\n\n"
-        "Qaysi ustunni chuqurroq bilmoqchisiz?"
+        🏛 Tarmoqli marketingning 4 ta mustahkam ustuni
+        Muvaffaqiyat tasodif emas, u — to‘g‘ri qurilgan arxitektura natijasidir. Agar biznesingiz o‘smayotgan bo‘lsa, demak, ushbu ustunlardan biri zaiflashgan.
+
+        1️⃣-ustun: Uzluksizlik (Biznesdan bir kun ham chiqib ketmaslik)
+        Bu tarmoqli marketingning "Oltin qoidasi".
+
+        Mohiyati: Biznesingiz "SMS apparati" (aloqa vositasi) hech qachon o‘chmasligi kerak. Hatto dam olayotganingizda ham fikringiz biznesda bo‘lsin.
+
+        Mashina effekti: Og‘ir mashinani itarayotganda to‘xtab qolsangiz, u nafaqat to‘xtaydi, balki orqaga qarab dumalaydi. Uni qayta joyidan jildirish uchun ikki barobar ko‘p kuch ketadi.
+
+        Natija: 3 oy to‘xtovsiz ishlasangiz — farqni ko‘rasiz, 6 oy ishlasangiz — hayotingiz o‘zgaradi.
+
+        2️⃣-ustun: Promoushn (Hurmat va e’tirof)
+        Bu — hamkorlarga kuch berish san’ati.
+
+        Mohiyati: Hurmat so‘zda va harakatda bo‘lishi, eng muhimi — chin yurakdan chiqishi shart.
+
+        Maqsadi: Pastdagi hamkorlaringizga ishonch bag‘ishlash. Ular o‘z tashkilotini qura olishiga ishonishlari uchun ularni e’tirof etish (promoushn qilish) kerak.
+
+        Qoida: Me’yorni biling, lekin asosiy maqsadni — insonni yetakchi sifatida ko‘tarishni unutmang.
+
+        3️⃣-ustun: Ustozlik (Upline va Downline munosabatlari)
+        Yolg‘iz harakat qilgan odam bu biznesda yutiladi.
+
+        Mohiyati: Yuqori turuvchi yetakchi (ustoz) va shogird o‘rtasidagi doimiy maslahatlashuv.
+
+        Maslahat qoidasi: Hech qachon mustaqil (ustozsiz) qaror qabul qilmang. Muvaffaqiyatli yetakchilardan nusxa ko‘chiring (modellashtirish).
+    
+        Yetakchi vazifasi: Shogirdlaringizga rahbar emas, yordamchi bo‘ling. Ularni e’tibordan chetda qoldirmang.
+
+        4️⃣-ustun: Munosabatlar konsepsiyasi
+        Bu — tizimning eng muhim va poydevor qismi.
+
+        Mohiyati: Tarmoqli marketing — bu odamlar o‘rtasidagi munosabatlar biznesidir.
+
+        Uzoq muddatli reja: Agar siz 25 yil davomida ishlaydigan va farzandlaringizga passiv daromad qoldiradigan tashkilot qurmoqchi bo‘lsangiz, uni munosabatlar ustiga quring.
+
+        Barqarorlik: Faqat kuchli insoniy aloqalargina inqiroz vaqtida jamoani saqlab qola oladi.
+
+        🎯 Xulosa:
+        Ushbu to‘rtta ustunni o‘z ish uslubingizga tatbiq qilsangiz, siz shunchaki sotuvchi emas, balki global tarmoq mutaxassisiga aylanasiz.
+      
     )
 
 @dp.message(Command("marketingplan"))
