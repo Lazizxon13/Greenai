@@ -1,4 +1,4 @@
-import asyncio
+    import asyncio
 import logging
 import os
 import pandas as pd
@@ -13,7 +13,7 @@ from aiohttp import web
 # ================= SOZLAMALAR =================
 TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
 GOOGLE_API_KEY = os.environ.get("GOOGLE_API_KEY")
-WEBHOOK_URL = os.environ.get("WEBHOOK_URL")          # Render.com da to'liq URL ni qo'ying
+WEBHOOK_URL = os.environ.get("WEBHOOK_URL")   # Render.com da to'liq URL bo'lishi kerak
 
 if not TELEGRAM_TOKEN or not GOOGLE_API_KEY or not WEBHOOK_URL:
     raise ValueError("❌ TELEGRAM_TOKEN, GOOGLE_API_KEY yoki WEBHOOK_URL topilmadi!")
@@ -45,18 +45,113 @@ client = genai.Client(api_key=GOOGLE_API_KEY)
 
 bot = Bot(token=TELEGRAM_TOKEN)
 dp = Dispatcher()
+logging.basicConfig(level=logging.INFO)
 
-# ================= SYSTEM PROMPT =================
+# ================= KUCHLI SYSTEM PROMPT =================
 SYSTEM_PROMPT = """
-Siz Greenleaf Family korporatsiyasining rasmiy Aqlli Marketing Maslahatchi AI sisiz...
+Siz Greenleaf Family korporatsiyasining rasmiy Aqlli Marketing Maslahatchi AI sisiz.
+
+SIZNING ASOSIY VAZIFANGIZ:
+- Greenleaf MLM biznesining 4 ta asosiy ustuni va 10 ta asosini mukammal bilish va o'rgatish.
+- Marketing plan, bonuslar, paketlar va imkoniyatlarni aniq tushuntirish.
+- Yangi hamkorlarni jalb qilish va shogirtlarni bosqichma-bosqich o'qitish.
+
+4 USTUN:
+1. Mahsulot sifati va talabi
+2. Marketing plani (daromad tizimi)
+3. O'qitish va rivojlanish
+4. Muunosabatlar va G'amxo'rlik (eng muhim ustun — Patmon Radjo konsepsiyasi)
+
+10 ASOS va barcha bonuslarni (Referal, Binary, SB, Voucher, Liderskiy va h.k.) mukammal bilasiz.
+
+MUHIM QOIDA:
+- "/4ustun", "4 ustun" yoki "to'rtinchi ustun" deb so'ralganda faqat biznesning 4 ta ustuni haqida gapiring.
+- Katalog faqat mahsulot haqidagi savollarda ishlatiladi.
+- Javoblar samimiy, ilhomlantiruvchi va "biz bir jamoamiz" ruhida bo'lsin.
 """
 
 # ================= BUYRUQLAR =================
 @dp.message(Command("start"))
 async def cmd_start(message: types.Message):
-    await message.answer("🌿 Assalomu alaykum! Greenleaf Family rasmiy AI Maslahatchisi oldingizda.\n\nBuyruqlar:\n/4ustun\n/10asos\n/marketingplan\n/qoshilish\n/taklif")
+    await message.answer(
+        "🌿 Assalomu alaykum! Greenleaf Family rasmiy AI Maslahatchisi oldingizda.\n\n"
+        "Buyruqlar:\n"
+        "/4ustun — 4 ustunni o‘rganing\n"
+        "/10asos — 10 asosni bosqichma-bosqich\n"
+        "/marketingplan — To‘liq marketing plan\n"
+        "/qoshilish — Hamkor bo‘lish bosqichlari\n"
+        "/taklif — Botni ulashing"
+    )
 
-# Boshqa buyruqlaringizni ham qo'shishingiz mumkin (oldingi koddan nusxa ko'chirib qo'ying)
+@dp.message(Command("4ustun"))
+async def cmd_4ustun(message: types.Message):
+    await message.answer(
+        "🌟 GREENLEAF BIZNESNING 4 USTUNI\n\n"
+        🏛 Tarmoqli marketingning 4 ta mustahkam ustuni
+        Muvaffaqiyat tasodif emas, u — to‘g‘ri qurilgan arxitektura natijasidir. Agar biznesingiz o‘smayotgan bo‘lsa, demak, ushbu ustunlardan biri zaiflashgan.
+
+        1️⃣-ustun: Uzluksizlik (Biznesdan bir kun ham chiqib ketmaslik)
+        Bu tarmoqli marketingning "Oltin qoidasi".
+
+        Mohiyati: Biznesingiz "SMS apparati" (aloqa vositasi) hech qachon o‘chmasligi kerak. Hatto dam olayotganingizda ham fikringiz biznesda bo‘lsin.
+
+        Mashina effekti: Og‘ir mashinani itarayotganda to‘xtab qolsangiz, u nafaqat to‘xtaydi, balki orqaga qarab dumalaydi. Uni qayta joyidan jildirish uchun ikki barobar ko‘p kuch ketadi.
+
+        Natija: 3 oy to‘xtovsiz ishlasangiz — farqni ko‘rasiz, 6 oy ishlasangiz — hayotingiz o‘zgaradi.
+
+        2️⃣-ustun: Promoushn (Hurmat va e’tirof)
+        Bu — hamkorlarga kuch berish san’ati.
+
+        Mohiyati: Hurmat so‘zda va harakatda bo‘lishi, eng muhimi — chin yurakdan chiqishi shart.
+
+        Maqsadi: Pastdagi hamkorlaringizga ishonch bag‘ishlash. Ular o‘z tashkilotini qura olishiga ishonishlari uchun ularni e’tirof etish (promoushn qilish) kerak.
+
+        Qoida: Me’yorni biling, lekin asosiy maqsadni — insonni yetakchi sifatida ko‘tarishni unutmang.
+
+        3️⃣-ustun: Ustozlik (Upline va Downline munosabatlari)
+        Yolg‘iz harakat qilgan odam bu biznesda yutiladi.
+
+        Mohiyati: Yuqori turuvchi yetakchi (ustoz) va shogird o‘rtasidagi doimiy maslahatlashuv.
+
+        Maslahat qoidasi: Hech qachon mustaqil (ustozsiz) qaror qabul qilmang. Muvaffaqiyatli yetakchilardan nusxa ko‘chiring (modellashtirish).
+
+        Yetakchi vazifasi: Shogirdlaringizga rahbar emas, yordamchi bo‘ling. Ularni e’tibordan chetda qoldirmang.
+
+        4️⃣-ustun: Munosabatlar konsepsiyasi
+        Bu — tizimning eng muhim va poydevor qismi.
+
+        Mohiyati: Tarmoqli marketing — bu odamlar o‘rtasidagi munosabatlar biznesidir.
+
+        Uzoq muddatli reja: Agar siz 25 yil davomida ishlaydigan va farzandlaringizga passiv daromad qoldiradigan tashkilot qurmoqchi bo‘lsangiz, uni munosabatlar ustiga quring.
+
+        Barqarorlik: Faqat kuchli insoniy aloqalargina inqiroz vaqtida jamoani saqlab qola oladi.
+
+        🎯 Xulosa:
+        Ushbu to‘rtta ustunni o‘z ish uslubingizga tatbiq qilsangiz, siz shunchaki sotuvchi emas, balki global tarmoq mutaxassisiga aylanasiz.
+    )
+
+@dp.message(Command("marketingplan"))
+async def cmd_marketingplan(message: types.Message):
+    await message.answer(
+        "📊 Greenleaf Marketing Planining asosiy qismlari:\n\n"
+        "• Platina paketi (275 PV) — eng mashhur\n"
+        "• Referal bonusi — 5%\n"
+        "• Binary (Komandniy) bonus\n"
+        "• Bonus s prodazh (SB)\n"
+        "• Voucher bonusi\n"
+        "• Liderskiy bonuslar va Direktorlar premiyalari\n\n"
+        "Qaysi bonus yoki qism haqida batafsil ma’lumot kerak?"
+    )
+
+@dp.message(Command("qoshilish"))
+async def cmd_join(message: types.Message):
+    await message.answer("✅ Hamkor bo‘lish juda oson!\n1. Ro‘yxatdan o‘ting\n2. Platina yoki boshqa paketni tanlang\n3. Shaxsiy aktivlikni boshlang\n\nHozir ro‘yxatdan o‘tmoqchimisiz?")
+
+@dp.message(Command("taklif"))
+async def cmd_referral(message: types.Message):
+    me = await bot.get_me()
+    link = f"https://t.me/{me.username}?start={message.from_user.id}"
+    await message.answer(f"🔗 Greenleaf oilasini kengaytiring!\n\nReferal havolangiz:\n{link}")
 
 # ================= ASOSIY JAVOB =================
 @dp.message()
@@ -77,11 +172,8 @@ async def handle_text(message: types.Message):
 # ================= WEBHOOK =================
 async def main():
     load_catalog(force=True)
-
-    # Webhook o'rnatish
     await bot.set_webhook(WEBHOOK_URL)
 
-    # Aiohttp application
     app = web.Application()
     SimpleRequestHandler(dispatcher=dp, bot=bot).register(app, "/")
     setup_application(app, dp, bot=bot)
@@ -91,10 +183,10 @@ async def main():
 
     runner = web.AppRunner(app)
     await runner.setup()
-    site = web.TCPSite(runner, "0.0.0.0", 10000)   # Render.com avtomatik 10000 port beradi
+    site = web.TCPSite(runner, "0.0.0.0", 10000)
     await site.start()
 
-    await asyncio.Event().wait()   # doimiy ishlashi uchun
+    await asyncio.Event().wait()
 
 if __name__ == "__main__":
     asyncio.run(main())
