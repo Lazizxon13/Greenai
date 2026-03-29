@@ -123,19 +123,19 @@ PAKETLAR VA KUPONLAR:
 
 ASOSIY BONUSLAR:
 1. Qavat bonusi (Uroven):
-   - Bronza/Kumush: 16$ 168000 so'm
-   - Zoloto: 48$    478800 so'm
-   - Platina: 88$    877800 so'm
-   - Brilliant: 240$    2394000 so'm
-   - Korona: 440$    4389000 so'm
+- Bronza/Kumush: 16$ 168000 so'm
+- Zoloto: 48$    478800 so'm
+- Platina: 88$    877800 so'm
+- Brilliant: 240$    2394000 so'm
+- Korona: 440$    4389000 so'm
 
 2. Binar (Binary) bonusi: 275pv Platina paketi misolida ko'rsatilgan
-   - Bronza: 5%     27431 so'm
-   - Serebro: 6%    65835 so'm
-   - Zoloto: 7%     115211 so'm
-   - Platina: 10%   274312 so'm 
-   - Brilliant: 12% 987525 so'm  
-   - Korona: 15%    2468812 so'm
+- Bronza: 5%     27431 so'm
+- Serebro: 6%    65835 so'm
+- Zoloto: 7%     115211 so'm
+- Platina: 10%   274312 so'm 
+- Brilliant: 12% 987525 so'm  
+- Korona: 15%    2468812 so'm
 
 3. Referal (Shaxsiy taklif) bonusi: Faqat Platina va undan yuqorilarda 5%
 
