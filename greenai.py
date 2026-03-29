@@ -1,6 +1,7 @@
 import asyncio
 import logging
 import os
+import json
 import pandas as pd
 from datetime import datetime, timedelta
 
@@ -20,17 +21,15 @@ if not TELEGRAM_TOKEN or not OPENAI_API_KEY or not WEBHOOK_URL:
 
 SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQAYDb5of_bCQCIBVpDj6VL3JMterNGELwCQDkPxtdyjLw5X8ODIS5oegBYWv3wUUBp2knWYUHvQDW-/pub?gid=1939417886&single=true&output=csv"
 
-# Global katalog
+# ================= KATALOG =================
 catalog_data = "Katalog yuklanmoqda..."
 last_update = None
 CACHE_MINUTES = 60
 
-# ================= KATALOG =================
 def load_catalog(force=False):
     global catalog_data, last_update
     if not force and last_update and (datetime.now() - last_update) < timedelta(minutes=CACHE_MINUTES):
         return
-
     try:
         df = pd.read_csv(SHEET_CSV_URL)
         catalog_data = df.to_string(index=False, max_rows=150)
@@ -39,8 +38,8 @@ def load_catalog(force=False):
     except Exception as e:
         print(f"❌ Katalog xatosi: {e}")
         catalog_data = "XATO: Katalog yuklanmadi."
-        
-        # ================= STATISTIKA =================
+
+# ================= STATISTIKA =================
 STATS_FILE = "bot_users.json"
 
 if not os.path.exists(STATS_FILE):
@@ -64,7 +63,8 @@ bot = Bot(token=TELEGRAM_TOKEN)
 dp = Dispatcher()
 logging.basicConfig(level=logging.INFO)
 
-SYSTEM_PROMPT = """
+# ================= SYSTEM PROMPT =================
+YSTEM_PROMPT = """
 Siz Dilnoza AI sisiz — Greenleaf Family korporatsiyasining rasmiy, samimiy va aqlli ayol maslahatchisi.
 
 SIZNING ENG MUHIM QOIDANGIZ:
@@ -158,28 +158,58 @@ Javob uslubi:
 
 Har javobda "biz bir jamoamiz" ruhini saqlang.
 """
+
 # ================= BUYRUQLAR =================
 @dp.message(Command("start"))
 async def cmd_start(message: types.Message):
     await message.answer(
-        "🌿 Assalomu alaykum! Greenleaf Family rasmiy AI Maslahatchisi oldingizda.\n\n"
+        "🌿 Assalomu alaykum! Men Dilnoza AI — Greenleaf Family rasmiy maslahatchisiman.\n\n"
         "Buyruqlar:\n"
         "/4ustun — 4 ustunni o‘rganing\n"
         "/10asos — 10 asosni bosqichma-bosqich\n"
         "/marketingplan — To‘liq marketing plan\n"
         "/qoshilish — Hamkor bo‘lish bosqichlari\n"
-        "/taklif — Botni ulashing"
+        "/taklif — Botni ulashing\n"
+        "/stats — Bot statistikasi (faqat admin)"
     )
 
 @dp.message(Command("4ustun"))
 async def cmd_4ustun(message: types.Message):
+    text = """🏛 Tarmoqli marketingning 4 ta mustahkam ustuni
+Muvaffaqiyat tasodif emas, u — to‘g‘ri qurilgan arxitektura natijasidir. Agar biznesingiz o‘smayotgan bo‘lsa, demak, ushbu ustunlardan biri zaiflashgan.
+
+1️⃣-ustun: Uzluksizlik (Biznesdan bir kun ham chiqib ketmaslik)
+Bu tarmoqli marketingning "Oltin qoidasi".
+
+2️⃣-ustun: Promoushn (Hurmat va e’tirof)
+Bu — hamkorlarga kuch berish san’ati.
+
+3️⃣-ustun: Ustozlik (Upline va Downline munosabatlari)
+Yolg‘iz harakat qilgan odam bu biznesda yutiladi.
+
+4️⃣-ustun: Munosabatlar konsepsiyasi
+Bu — tizimning eng muhim va poydevor qismi.
+
+🎯 Xulosa: Ushbu to‘rtta ustunni o‘z ish uslubingizga tatbiq qilsangiz, siz shunchaki sotuvchi emas, balki global tarmoq mutaxassisiga aylanasiz.
+
+Qaysi ustunni chuqurroq o‘rganmoqchisiz?"""
+    await message.answer(text)
+
+@dp.message(Command("10asos"))
+async def cmd_10asos(message: types.Message):
     await message.answer(
-        "🌟 GREENLEAF BIZNESNING 4 USTUNI\n\n"
-        "1️⃣ Uzluksizlik: Qanday qilib har kuni motivatsiyani yo‘qotmay harakat qilish.\n"
-        "2️⃣ Promoushn: Hamkorlarni ruhlantirish va e’tirof etish san’ati.\n"
-        "3️⃣ Ustozlik: To‘g‘ri nusxa ko‘chirish (duplikatsiya) tizimi.\n"
-        "4️⃣ Munosabatlar: Yillar davomida ishlaydigan mustahkam jamoa tuzish.\n\n"
-        "Qaysi ustunni chuqurroq bilmoqchisiz?"
+        "📋 БИЗНЕСДА МУВАФФАҚИЯТГА ЭРИШИШНИНГ 10 АСОСИ\n\n"
+        "1. Тўғри нуқтаи назар\n"
+        "2. Мақсад белгилаш\n"
+        "3. Масъулият ва Вақт\n"
+        "4. Рўйхат тузиш\n"
+        "5. Тўғри таклиф қилиш\n"
+        "6. Презентация\n"
+        "7. Кузатув (Follow up)\n"
+        "8. Харид ва Рўйхатдан ўтиш\n"
+        "9. Ҳимоя қилиш\n"
+        "10. Шогирд тайёрлаш\n\n"
+        "Qaysi asosdan boshlaymiz?"
     )
 
 @dp.message(Command("stats"))
@@ -190,9 +220,10 @@ async def cmd_stats(message: types.Message):
     total = stats["total_users"]
     await message.answer(f"📊 Bot statistikasi\n\n👥 Botga a'zo bo‘lganlar: **{total} ta**")
 
-# ================= ASOSIY JAVOB (OpenAI) =================
+# ================= ASOSIY JAVOB =================
 @dp.message()
 async def handle_text(message: types.Message):
+    # ================= YANGI FOYDALANUVCHINI HISOBLASH =================
     user_id = message.from_user.id
     if user_id not in stats["users"]:
         stats["users"].append(user_id)
@@ -208,10 +239,10 @@ async def handle_text(message: types.Message):
             model="gpt-4o-mini",
             messages=[
                 {"role": "system", "content": SYSTEM_PROMPT},
-                {"role": "user", "content": f"Katalog:\n{catalog_data}\n\nFoydalanuvchi savoli: {message.text}"}
+                {"role": "user", "content": f"Katalog:\n{catalog_data}\n\nSavol: {message.text}"}
             ],
             temperature=0.7,
-            max_tokens=800
+            max_tokens=900
         )
         await message.reply(response.choices[0].message.content)
     except Exception as e:
@@ -227,7 +258,7 @@ async def main():
     SimpleRequestHandler(dispatcher=dp, bot=bot).register(app, "/")
     setup_application(app, dp, bot=bot)
 
-    print("🚀 Greenleaf AI bot OpenAI bilan webhook orqali ishga tushdi!")
+    print("🚀 Greenleaf AI bot (Dilnoza) ishga tushdi!")
     print(f"Webhook URL: {WEBHOOK_URL}")
 
     runner = web.AppRunner(app)
