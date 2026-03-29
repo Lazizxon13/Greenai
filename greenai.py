@@ -39,6 +39,23 @@ def load_catalog(force=False):
     except Exception as e:
         print(f"❌ Katalog xatosi: {e}")
         catalog_data = "XATO: Katalog yuklanmadi."
+        
+        # ================= STATISTIKA =================
+STATS_FILE = "bot_users.json"
+
+if not os.path.exists(STATS_FILE):
+    with open(STATS_FILE, "w", encoding="utf-8") as f:
+        json.dump({"total_users": 0, "users": []}, f, ensure_ascii=False)
+
+def load_stats():
+    with open(STATS_FILE, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+def save_stats(data):
+    with open(STATS_FILE, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+
+stats = load_stats()
 
 # ================= OPENAI =================
 client = AsyncOpenAI(api_key=OPENAI_API_KEY)
@@ -165,9 +182,24 @@ async def cmd_4ustun(message: types.Message):
         "Qaysi ustunni chuqurroq bilmoqchisiz?"
     )
 
+@dp.message(Command("stats"))
+async def cmd_stats(message: types.Message):
+    if message.from_user.id != 123456789:   # ← BU YERGA O‘ZINGIZNING TELEGRAM ID INGIZNI YOZING!
+        await message.answer("Bu buyruq faqat admin uchun!")
+        return
+    total = stats["total_users"]
+    await message.answer(f"📊 Bot statistikasi\n\n👥 Botga a'zo bo‘lganlar: **{total} ta**")
+
 # ================= ASOSIY JAVOB (OpenAI) =================
 @dp.message()
 async def handle_text(message: types.Message):
+    user_id = message.from_user.id
+    if user_id not in stats["users"]:
+        stats["users"].append(user_id)
+        stats["total_users"] = len(stats["users"])
+        save_stats(stats)
+        print(f"✅ Yangi foydalanuvchi: {user_id} | Jami: {stats['total_users']}")
+
     await bot.send_chat_action(message.chat.id, "typing")
     load_catalog()
 
