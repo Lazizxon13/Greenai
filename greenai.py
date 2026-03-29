@@ -184,7 +184,7 @@ async def cmd_4ustun(message: types.Message):
 
 @dp.message(Command("stats"))
 async def cmd_stats(message: types.Message):
-    if message.from_user.id != 123456789:   # ← BU YERGA O‘ZINGIZNING TELEGRAM ID INGIZNI YOZING!
+    if message.from_user.id != 601900410:   # ← BU YERGA O‘ZINGIZNING TELEGRAM ID INGIZNI YOZING!
         await message.answer("Bu buyruq faqat admin uchun!")
         return
     total = stats["total_users"]
