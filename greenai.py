@@ -67,17 +67,10 @@ logging.basicConfig(level=logging.INFO)
 SYSTEM_PROMPT = """
 Siz Dilnoza AI sisiz — Greenleaf Family korporatsiyasining rasmiy, samimiy va aqlli ayol maslahatchisi.
 
-4 TA MUSTAHKAM USTUN VA 10 ASOSNI MUKAMMAL BILING.
-Marketing plan, paketlar, kuponlar va bonuslar haqida faqat rasmiy ma'lumot bering.
-
-Javob uslubi: iliq, mehribon, "biz bir jamoamiz" ruhida.
-Mahsulot haqida so'ralganda har doim quyidagi formatda javob bering:
-✨ Greenleaf Sifati ✨
-🧼 Mahsulot: ...
-🆔 Kod: ...
-💰 Narx: ... so'm
-💎 Ball: ... PV
-✅ [qisqa foydasi va tavsiya]
+SIZNING ENG MUHIM QOIDANGIZ:
+- /10asos buyruqiga faqat aniq 10 ta asos matnini berasiz.
+- /4ustun buyruqiga faqat 4 ta ustun matnini berasiz.
+- Hech qachon o'zingizdan to'qima ma'lumot qo'shmang.
 """
 
 # ================= BUYRUQLAR =================
@@ -85,9 +78,50 @@ Mahsulot haqida so'ralganda har doim quyidagi formatda javob bering:
 async def cmd_start(message: types.Message):
     await message.answer("🌿 Assalomu alaykum! Men Dilnoza AI — Greenleaf Family rasmiy maslahatchisiman.")
 
+@dp.message(Command("4ustun"))
+async def cmd_4ustun(message: types.Message):
+    text = """🏛 Tarmoqli marketingning 4 ta mustahkam ustuni
+Muvaffaqiyat tasodif emas, u — to‘g‘ri qurilgan arxitektura natijasidir. Agar biznesingiz o‘smayotgan bo‘lsa, demak, ushbu ustunlardan biri zaiflashgan.
+
+1️⃣-ustun: Uzluksizlik (Biznesdan bir kun ham chiqib ketmaslik)
+Bu tarmoqli marketingning "Oltin qoidasi".
+
+2️⃣-ustun: Promoushn (Hurmat va e’tirof)
+Bu — hamkorlarga kuch berish san’ati.
+
+3️⃣-ustun: Ustozlik (Upline va Downline munosabatlari)
+Yolg‘iz harakat qilgan odam bu biznesda yutiladi.
+
+4️⃣-ustun: Munosabatlar konsepsiyasi
+Bu — tizimning eng muhim va poydevor qismi.
+
+🎯 Xulosa: Ushbu to‘rtta ustunni o‘z ish uslubingizga tatbiq qilsangiz, siz shunchaki sotuvchi emas, balki global tarmoq mutaxassisiga aylanasiz.
+
+Qaysi ustunni chuqurroq o‘rganmoqchisiz?"""
+    await message.answer(text)
+
+@dp.message(Command("10asos"))
+async def cmd_10asos(message: types.Message):
+    text = """🚀 БИЗНЕСДА МУВАФФАҚИЯТГА ЭРИШИШНИНГ 10 АСОСИ
+Greenleaf тизимида профессионал лидер бўлиш ва катта даромадга чиқиш учун қуйидаги 10 та олтин қоидага амал қилиш шарт:
+
+1. Тўғри нуқтаи назар (Фикрлаш)
+2. Мақсад белгилаш
+3. Масъулият ва Вақт
+4. Рўйхат тузиш
+5. Тўғри таклиф қилиш
+6. Презентация
+7. Кузатув (Follow up)
+8. Харид ва Рўйхатдан ўтиш
+9. Ҳимоя қилиш
+10. Шогирд тайёрлаш
+
+Qaysi asosdan boshlaymiz?"""
+    await message.answer(text)
+
 @dp.message(Command("stats"))
 async def cmd_stats(message: types.Message):
-    if message.from_user.id != 601900410:   # ← BU YERGA O‘ZINGIZNING TELEGRAM ID INGIZNI YOZING!
+    if message.from_user.id != 601900410:  # Sizning IDingiz
         await message.answer("Bu buyruq faqat admin uchun!")
         return
     total = stats["total_users"]
@@ -126,19 +160,15 @@ async def handle_text(message: types.Message):
 async def main():
     load_catalog(force=True)
     await bot.set_webhook(WEBHOOK_URL)
-
     app = web.Application()
     SimpleRequestHandler(dispatcher=dp, bot=bot).register(app, "/")
     setup_application(app, dp, bot=bot)
-
     print("🚀 Greenleaf AI bot (Dilnoza) ishga tushdi!")
     print(f"Webhook URL: {WEBHOOK_URL}")
-
     runner = web.AppRunner(app)
     await runner.setup()
     site = web.TCPSite(runner, "0.0.0.0", 10000)
     await site.start()
-
     await asyncio.Event().wait()
 
 if __name__ == "__main__":
