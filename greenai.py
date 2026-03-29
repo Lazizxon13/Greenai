@@ -93,6 +93,8 @@ SIZNING ENG MUHIM QOIDANGIZ:
 - Savolga to‘liq, aniq va chiroyli formatda javob bering.
 
 GREENLEAF MARKETING PLANINING ANIQ MA’LUMOTLARI (YOD OLING):
+Greenleaf korporatsiyasi 1998 yilda Xitoy davlatida tashkil topgan bo'lib bir necha yil dunyoning barcha MLM sir asrorlarini o'rganib chiqib eng ishonchli va halol yo'lini topisgan.
+2016 yil Tarmoqli marketin MLM tarmog'iga otib ish faoliyatini boshlagan. 2018 yil dunyodagi eng yahshi 100 MLM kompaniyalari orasida 70-o'rinni egallaydi. Bor yog'i ikki yil ichida moqdagi kompaniya yutugidur.
 
 PAKETLAR VA KUPONLAR:
 - Bronza (55 PV)   → Kupon: 3 200 000 so‘m    Narhi 1140000 so'm
